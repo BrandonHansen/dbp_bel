@@ -4,6 +4,7 @@ import time
 exp_name = True
 exp_ingr = False
 exp_prep = False
+cur_name = ''
 
 def parseIngredients(line):
 	ingredient = 'none'
@@ -26,12 +27,25 @@ def parseIngredients(line):
 		quantity = parsed[0].strip()
 		ingredient = parsed[1].strip()
 	return (ingredient, quantity)
+	
+def parsePreparation(line):
+	preparation = 'none'
+	nutrition = 'none'
+	parsed = line.split('Per Serving: ')
+	preparation = parsed[0].strip()
+	if len(parsed) > 1:
+		nutrition = parsed[1].strip()
+	return (preparation, nutrition)
 
 
 def parseRecipe(line):
 	global exp_name
 	global exp_ingr
 	global exp_prep
+	global cur_name
+	global recipe_df
+	global ingr_df
+	global recipe_ingr_df
 	
 	ignore = ['Could NOT Open Recipe Page Due To:', 'Conversion from type \'DBNull\' to type \'String\' is not valid.']
 	
@@ -40,6 +54,7 @@ def parseRecipe(line):
 	
 	if exp_name:
 		print('name:', line)
+		cur_name = line
 		exp_name = False
 	elif line == 'ingredients':
 		exp_ingr = True
@@ -47,17 +62,24 @@ def parseRecipe(line):
 		exp_ingr = False
 		exp_prep = True
 	elif exp_ingr:
-		print('ingr:', parseIngredients(line))
+		parsed = parseIngredients(line)
+		ingr_df.write(parsed[0]+'\n')
+		recipe_ingr_df.write(cur_name+',{'+parsed[0]+'},{'+parsed[1]+'}\n')
+		print('ingr:', parsed)
 	elif exp_prep:
-		print('prep:', line)
+		parsed = parsePreparation(line)
+		print('prep:', parsed)
+		recipe_df.write(cur_name+',{'+parsed[0]+'},{'+parsed[1]+'}\n')
 	else:
 		print('---UNRECOGNIZED INSTANCE---')
 	
-def main(file_name):
+def main(input_file):
 	global exp_name
 	global exp_ingr
 	global exp_prep
-	with open(file_name, 'r') as f:
+	global cur_name
+	
+	with open(input_file, 'r') as f:
 
 		line = f.readline()
 		while line != 'EOF':
@@ -70,7 +92,14 @@ def main(file_name):
 			exp_name = True
 			line = f.readline()
 
-file_name = 'recipe_example.txt'
-main(file_name)
+input_file = 'recipe_example.txt'
+recipe_df = open('recipe_df.txt', 'w')
+ingr_df = open('ingr_df.txt', 'w')
+recipe_ingr_df = open('recipe_ingr_df.txt', 'w')
 
-#print('2 (8 oz.)  cans chopped clams, including juice'.replace('(', ''))
+main(input_file)
+
+recipe_df.close()
+ingr_df.close()
+recipe_ingr_df.close()
+
