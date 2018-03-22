@@ -1,5 +1,7 @@
 import re
 import time
+import sys
+
 
 exp_name = True
 exp_ingr = False
@@ -64,12 +66,12 @@ def parseRecipe(line):
 	elif exp_ingr:
 		parsed = parseIngredients(line)
 		ingr_df.write(parsed[0]+'\n')
-		recipe_ingr_df.write(cur_name+',{'+parsed[0]+'},{'+parsed[1]+'}\n')
+		recipe_ingr_df.write(cur_name+'<!><!><!>'+parsed[0]+'<!><!><!>'+parsed[1]+'\n')
 		print('ingr:', parsed)
 	elif exp_prep:
 		parsed = parsePreparation(line)
 		print('prep:', parsed)
-		recipe_df.write(cur_name+',{'+parsed[0]+'},{'+parsed[1]+'}\n')
+		recipe_df.write(cur_name+'<!><!><!>'+parsed[0]+'<!><!><!>'+parsed[1]+'\n')
 	else:
 		print('---UNRECOGNIZED INSTANCE---')
 	
@@ -92,12 +94,15 @@ def main(input_file):
 			exp_name = True
 			line = f.readline()
 
-input_file = 'recipe_example.txt'
+fnames = []
 recipe_df = open('recipe_df.txt', 'w')
 ingr_df = open('ingr_df.txt', 'w')
 recipe_ingr_df = open('recipe_ingr_df.txt', 'w')
 
-main(input_file)
+for nm in fnames:
+
+	input_file = nm+'.txt'
+	main(input_file)
 
 recipe_df.close()
 ingr_df.close()
