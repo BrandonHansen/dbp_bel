@@ -74,6 +74,7 @@ def parseRecipe(line):
 		recipe_df.write(cur_name+'<!><!><!>'+parsed[0]+'<!><!><!>'+parsed[1]+'\n')
 	else:
 		print('---UNRECOGNIZED INSTANCE---')
+		print('Bad Instance: ', line)
 	
 def main(input_file):
 	global exp_name
@@ -94,7 +95,7 @@ def main(input_file):
 			exp_name = True
 			line = f.readline()
 
-fnames = []
+fnames = ['recipes']
 recipe_df = open('recipe_df.txt', 'w')
 ingr_df = open('ingr_df.txt', 'w')
 recipe_ingr_df = open('recipe_ingr_df.txt', 'w')

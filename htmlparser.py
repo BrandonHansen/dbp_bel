@@ -2,17 +2,6 @@ from html.parser import HTMLParser
 import pandas as pd
 # create a subclass and override the handler methods
 #https://docs.python.org/2/library/htmlparser.html
-class MyHTMLParser(HTMLParser):
-	def handle_starttag(self, tag, attrs):
-		print("Encountered a start tag:", tag)
-
-	def handle_endtag(self, tag):
-		print("Encountered an end tag :", tag)
-
-	def handle_data(self, data):
-		print("Encountered some data  :", data)
-		f.write(data+'\n')
-
 
 def parsehtmlfile(in_file):
 
@@ -23,6 +12,17 @@ def parsehtmlfile(in_file):
 	f = open(out_file, what_do_out)
 
 
+	class MyHTMLParser(HTMLParser):
+		def handle_starttag(self, tag, attrs):
+			print("Encountered a start tag:", tag)
+
+		def handle_endtag(self, tag):
+			print("Encountered an end tag :", tag)
+
+		def handle_data(self, data):
+			print("Encountered some data  :", data)
+			f.write(data+'\n')
+	
 	#open csv file in pandas, usecols only gets columns defined,
 	#    add other column names like usecols=['category', 'title', 'info']
 	df = pd.read_csv(in_file, usecols=['info'])
@@ -39,9 +39,12 @@ def parsehtmlfile(in_file):
 
 	f.close()
 
-ins = ['appetizers.csv', 'cake.csv', 'dips.csv', 'nuts.csv', 'sushi.csv', 'beverage.csv', 'christmas.csv', 'favorites.csv', 'pasta.csv', 'thanksgiving.csv', 'breads.csv', 'dinnerparty.csv', 'healthy.csv', 'quickandeasy.csv', 'vegetable.csv']
+ins = ['appetizers.csv', 'cake.csv', 'dips.csv', 'nuts.csv', 'sushi.csv', 
+'favorites.csv', 'pasta.csv', 'breads.csv', 'dinnerparty.csv', 'healthy.csv', 
+'quickandeasy.csv', 'vegetable.csv']
 
 for nm in ins:
+	print(nm)
 	parsehtmlfile('recipedata/'+nm)
 
 
