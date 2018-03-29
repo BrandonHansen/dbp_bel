@@ -3,10 +3,10 @@ import pandas as pd
 # create a subclass and override the handler methods
 #https://docs.python.org/2/library/htmlparser.html
 
-def parsehtmlfile(in_file):
+out_file = 'recipes.txt'
+what_do_out = 'a'#write 'w' or append 'a', write writes over append just appends to bottom
 
-	out_file = 'recipes.txt'
-	what_do_out = 'a'#write 'w' or append 'a', write writes over append just appends to bottom
+def parsehtmlfile(in_file, out_file, what_do_out):
 
 	#open file for writing
 	f = open(out_file, what_do_out)
@@ -43,7 +43,8 @@ ins = ['firstpage.csv', 'appetizers.csv', 'chicken.csv', 'favorites.csv', 'healt
 
 for nm in ins:
 	print(nm)
-	parsehtmlfile('recipedata/'+nm)
+	parsehtmlfile('recipedata/'+nm, out_file, what_do_out)
 
-
+with open(out_file, what_do_out) as f:
+	f.write('EOF')
 
