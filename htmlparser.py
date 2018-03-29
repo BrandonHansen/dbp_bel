@@ -6,7 +6,7 @@ import pandas as pd
 def parsehtmlfile(in_file):
 
 	out_file = 'recipes.txt'
-	what_do_out = 'w'#write 'w' or append 'a', write writes over append just appends to bottom
+	what_do_out = 'a'#write 'w' or append 'a', write writes over append just appends to bottom
 
 	#open file for writing
 	f = open(out_file, what_do_out)
@@ -39,7 +39,7 @@ def parsehtmlfile(in_file):
 
 	f.close()
 
-ins = ['firstpage.csv']
+ins = ['firstpage.csv', 'appetizers.csv', 'chicken.csv', 'favorites.csv', 'healthy.csv', 'salad.csv', 'beef.csv', 'christmas.csv', 'nuts.csv', 'soup.csv', 'beverages.csv', 'dessert.csv', 'fish.csv', 'pasta.csv', 'sushi.csv', 'breads.csv', 'dinnerparty.csv', 'fruit.csv', 'pizza.csv', 'thanksgiving.csv', 'cake.csv', 'dips.csv', 'grilling.csv', 'quickandeasy.csv', 'vegetable.csv']
 
 for nm in ins:
 	print(nm)
