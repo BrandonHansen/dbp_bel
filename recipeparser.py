@@ -40,7 +40,7 @@ def parsePreparation(line):
 	return (preparation, nutrition)
 
 
-def parseRecipe(line):
+def parseRecipe(line, line_index):
 	global exp_name
 	global exp_ingr
 	global exp_prep
@@ -50,9 +50,9 @@ def parseRecipe(line):
 	global recipe_ingr_df
 	
 	ignore = ['Could NOT Open Recipe Page Due To:', 'Conversion from type \'DBNull\' to type \'String\' is not valid.']
-	
+
 	if line in ignore:
-		return
+		return 0
 	
 	if exp_name:
 		print('name:', line)
@@ -66,21 +66,25 @@ def parseRecipe(line):
 	elif exp_ingr:
 		parsed = parseIngredients(line)
 		ingr_df.write(parsed[0]+'\n')
-		recipe_ingr_df.write(cur_name+'<!><!><!>'+parsed[0]+'<!><!><!>'+parsed[1]+'\n')
+		recipe_ingr_df.write(str(line_index)+'<!><!><!>'+cur_name+'<!><!><!>'+parsed[0]+'<!><!><!>'+parsed[1]+'\n')
 		print('ingr:', parsed)
 	elif exp_prep:
 		parsed = parsePreparation(line)
 		print('prep:', parsed)
-		recipe_df.write(cur_name+'<!><!><!>'+parsed[0]+'<!><!><!>'+parsed[1]+'\n')
+		recipe_df.write(str(line_index)+'<!><!><!>'+cur_name+'<!><!><!>'+parsed[0]+'<!><!><!>'+parsed[1]+'\n')
+		return 1
 	else:
 		print('---UNRECOGNIZED INSTANCE---')
 		print('Bad Instance: ', line)
+	return 0
 	
 def main(input_file):
 	global exp_name
 	global exp_ingr
 	global exp_prep
 	global cur_name
+
+	line_index = 0
 	
 	with open(input_file, 'r') as f:
 
@@ -89,7 +93,7 @@ def main(input_file):
 		
 			while line != '\n':
 				nline = line.replace('\n', '')
-				parseRecipe(nline)
+				line_index += parseRecipe(nline, line_index)
 				line = f.readline()
 			exp_prep = False
 			exp_name = True
